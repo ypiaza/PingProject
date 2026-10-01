@@ -101,7 +101,7 @@ def login(usuario: schemas.UsuarioCriar, db: Session = Depends(get_db)):
     }
 
 
-# Classe para gerenciar as conexões ativas do chat 💬
+# Classe para gerenciar as conexões ativas do chat
 class ConnectionManager:
     def __init__(self):
         # Lista de conexões ativas
@@ -129,7 +129,7 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
-            await websocket.close(code=1008) # Código 1008 = Violação de Política
+            await websocket.close(code=1008)
             return
     except PyJWTError:
         # Se o token for inválido ou expirado, rejeita a conexão 

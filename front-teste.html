@@ -34,7 +34,7 @@
 
     <script>
         // Conecta ao servidor WebSocket do FastAPI 
-        // Substitua o seu token de teste retornado pelo /login na string abaixo ⬇️
+        // Substitua o seu token de teste retornado pelo /login na string abaixo ⬇
         const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE3OTA4MTk0NDZ9.YFUetu8G1BqxXyY7uMsT4tMDwTtuhYjlDjnx6Jsq7To";
 
         const ws = new WebSocket(`ws://127.0.0.1:8000/ws/chat?token=${token}`);
@@ -42,7 +42,7 @@
         const mensagensDiv = document.getElementById("mensagens");
         const inputMensagem = document.getElementById("inputMensagem");
 
-        // Executado quando recebe uma nova mensagem do servidor 📩
+        // Executado quando recebe uma nova mensagem do servidor 
         ws.onmessage = function (event) {
             const novaMensagem = document.createElement("div");
             novaMensagem.className = "msg";
@@ -51,7 +51,7 @@
             mensagensDiv.scrollTop = mensagensDiv.scrollHeight; // Rola até o final
         };
 
-        // Função para enviar mensagem 📤
+        // Função para enviar mensagem 
         function enviarMensagem() {
             if (inputMensagem.value.trim() !== "") {
                 ws.send(inputMensagem.value);
