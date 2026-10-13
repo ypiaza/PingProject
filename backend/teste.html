@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Feed teste rede social</h1>
+    <button onclick="carregarPosts()">Carregar posts do backend</button>
+    <div id="post_area">
+
+    </div>
+    <hr>
+    <h3>Criar um novo post</h3>
+    <form id="form-post" onsubmit="newPost()">
+        <input type="text" id="autor" placeholder="Seu nome" required><br><br>
+        <textarea id="conteudo" placeholder="O que você está pensando?" required></textarea><br><br>
+        <button type="submit">Publicar</button>
+    </form>
+    <hr>
+
+    <script>
+        async function newPost() {
+            event.preventDefault();
+
+            const autor = document.getElementById('autor').value
+            const conteudo = document.getElementById('conteudo').value
+
+            try{
+                const resposta = fetch('http://127.0.0.1:8000/posts', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({autor: autor, conteudo: conteudo})
+                })
+            if(resposta.ok){
+                alert('Post publicado!');
+
+                document.getElementById('autor').value = '';
+                document.getElementById('conteudo').value = '';
+            } else{
+                alert('Erro ao publicar!');
+            }
+        } catch (error){
+            console.error("Erro:", error)
+            alert("Erro na conexão")
+        }}
+
+        async function carregarPosts() {
+            const container = document.getElementById('post_area')
+            container.innerHTML = "<p>Carregando...</p>"
+
+            try {
+                const resposta = await fetch('http://127.0.0.1:8000/posts');
+
+                const posts = await resposta.json();
+
+                console.log(posts)
+
+                container.innerHTML = "";
+
+                posts.forEach(post => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <strong>Autor: ${post.autor}</strong>
+                        <p>${post.conteudo}</p>
+                    `
+                    container.appendChild(div);
+                })
+
+            } catch (error) {
+                console.error("Erro ao buscar dados: ", error);
+                container.innerHTML = "<p>parece que deu ruim...</p>"
+            }
+
+        }
+
+    </script>
+</body>
+
+</html>
