@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react"
+import Header from "./components/Header";
+import PostForm from "./components/PostForm";
 
 const App = () => {
   const [posts, setPosts] = useState([]);
@@ -33,9 +35,7 @@ const App = () => {
         },
         body: JSON.stringify({ autor: autor, conteudo: conteudo })
       })
-      if (resposta.ok) {
-        alert('Post publicado!');
-
+      if (resposta) {
         setAutor('');
         setConteudo('');
 
@@ -50,46 +50,36 @@ const App = () => {
   };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '40px auto', fontFamily: 'Arial' }}>
-      <h1>Feed teste rede social</h1>
+    <div className="h-screen w-full bg-zinc-800 flex flex-col overflow-hidden">
+      <Header />
+      
+      <div className="w-full flex-1 overflow-y-auto flex flex-col items-center gap-4 pt-24 pb-10">
+        <PostForm post={newPost} autorprops={autor} autorset={setAutor} conteudoprops={conteudo} conteudoset={setConteudo}/> 
 
-      {/* Formulário de Criação */}
-      <h3>Criar um novo post</h3>
-      <form onSubmit={newPost}>
-        <input
-          type="text"
-          placeholder="Seu nome"
-          value={autor}
-          onChange={(e) => setAutor(e.target.value)}
-          required
-        />
-        <br /><br />
-        <textarea
-          placeholder="O que você está pensando?"
-          value={conteudo}
-          onChange={(e) => setConteudo(e.target.value)}
-          required
-        />
-        <br /><br />
-        <button type="submit">Publicar</button>
-      </form>
+        {carregando ? (
+          <p className="text-white">Carregando...</p>
+        ) : posts.length === 0 ? (
+          <p className="text-white">Nenhum post encontrado.</p>
+        ) : (
+          [...posts].reverse().map((post) => (
+            <div key={post.id} className="w-125 flex flex-col items-center justify-evenly border-[0.05rem] border-white/50 px-5 py-3 hover:scale-110">
+              <div className="w-full items-start">
+                <p className="text-white font-bold text-[0.60rem]">~ {post.autor}</p>
+              </div>
 
-      <hr />
+              <div className="my-5">
+                <p className="text-white font-bold text-[0.80rem]">{post.conteudo}</p>
+              </div>
 
-      {/* Listagem de Posts */}
-      <h3>Feed de Posts</h3>
-      {carregando ? (
-        <p>Carregando...</p>
-      ) : posts.length === 0 ? (
-        <p>Nenhum post encontrado.</p>
-      ) : (
-        posts.map((post) => (
-          <div key={post.id} style={{ border: '1px solid #ccc', padding: '10px', marginBottom: '10px', borderRadius: '5px' }}>
-            <strong>Autor: {post.autor}</strong>
-            <p>{post.conteudo}</p>
-          </div>
-        ))
-      )}
+              <div className="w-full flex items-center justify-evenly">
+                <a className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">concordar</a>
+                <a className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">discordar</a>
+                <a className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">cooperar</a>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   )
 }
