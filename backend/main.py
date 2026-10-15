@@ -22,9 +22,17 @@ posts_db = [
     {"id": 2, "autor": "Nath", "conteudo": "O dia está lindo!"}
 ]
 
+users_db = [
+    {"login": "yuri", "senha": "1234"}
+]
+
 class PostCreate(BaseModel):
     autor: str
     conteudo: str
+
+class UserCreate(BaseModel):
+    login: str
+    senha: str
 
 
 @app.get("/posts")
@@ -44,3 +52,18 @@ def criar_post(post: PostCreate):
     posts_db.append(novo_post)
 
     return  {"mensagem": "Post criado com sucesso!", "post": novo_post}
+
+@app.get("/users")
+def users_list():
+    return users_db
+
+@app.post("/users")
+def criar_user(user: UserCreate):
+    novo_user = {
+        "login": user.login,
+        "senha": user.senha
+    }
+
+    users_db.append(novo_user)
+
+    return {"mensagem": "Novo usuário cadastrado!", "user": novo_user}

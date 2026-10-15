@@ -23,61 +23,18 @@
     <hr>
 
     <script>
-        async function newPost() {
-            event.preventDefault();
+        async function login_test() {
 
-            const autor = document.getElementById('autor').value
-            const conteudo = document.getElementById('conteudo').value
+            const resp = await fetch('http://127.0.0.1:8000/users')
+            const data = await data.json()
 
-            try{
-                const resposta = fetch('http://127.0.0.1:8000/posts', {
-                    method: 'POST',
-                    headers: {
-                    'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({autor: autor, conteudo: conteudo})
-                })
-            if(resposta.ok){
-                alert('Post publicado!');
-
-                document.getElementById('autor').value = '';
-                document.getElementById('conteudo').value = '';
-            } else{
-                alert('Erro ao publicar!');
-            }
-        } catch (error){
-            console.error("Erro:", error)
-            alert("Erro na conexão")
-        }}
-
-        async function carregarPosts() {
-            const container = document.getElementById('post_area')
-            container.innerHTML = "<p>Carregando...</p>"
-
-            try {
-                const resposta = await fetch('http://127.0.0.1:8000/posts');
-
-                const posts = await resposta.json();
-
-                console.log(posts)
-
-                container.innerHTML = "";
-
-                posts.forEach(post => {
-                    const div = document.createElement('div');
-                    div.innerHTML = `
-                        <strong>Autor: ${post.autor}</strong>
-                        <p>${post.conteudo}</p>
-                    `
-                    container.appendChild(div);
-                })
-
-            } catch (error) {
-                console.error("Erro ao buscar dados: ", error);
-                container.innerHTML = "<p>parece que deu ruim...</p>"
-            }
-
+            if(data.ok){
+                log(data)
         }
+
+    }
+
+        login_test()
 
     </script>
 </body>
