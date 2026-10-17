@@ -1,87 +1,32 @@
-import { useState, useEffect } from "react"
-import Header from "./components/Header";
-import PostForm from "./components/PostForm";
+import { BrowserRouter, data, Navigate, Route, Routes } from "react-router-dom"
+import Feed from "./components/Feed"
+import Login from "./components/Login"
+import { useState } from "react"
+
 
 const App = () => {
-  const [posts, setPosts] = useState([]);
-  const [autor, setAutor] = useState('');
-  const [conteudo, setConteudo] = useState('');
-  const [carregando, setCarregando] = useState(true)
+    const [auth, setAuth] = useState(false);
+    const [userLogado, setUserLogado] = useState('');
 
-  const carregarPosts = async () => {
-    try {
-      const resposta = await fetch('http://127.0.0.1:8000/posts');
-      const posts = await resposta.json();
-      setPosts(posts);
-    } catch (error) {
-      console.error("Erro ao buscar dados: ", error);
-    } finally {
-      setCarregando(false);
-    }
-  };
-
-  useEffect(() => {
-    carregarPosts();
-  }, [])
-
-  const newPost = async (event) => {
-    event.preventDefault();
-
-    try {
-      const resposta = fetch('http://127.0.0.1:8000/posts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ autor: autor, conteudo: conteudo })
-      })
-      if (resposta) {
-        setAutor('');
-        setConteudo('');
-
-        carregarPosts();
-      } else {
-        alert('Erro ao publicar!');
-      }
-    } catch (error) {
-      console.error(error)
-      alert('Deu ruim!')
-    }
-  };
-
-  return (
-    <div className="h-screen w-full bg-zinc-800 flex flex-col overflow-hidden">
-      <Header />
-      
-      <div className="w-full flex-1 overflow-y-auto flex flex-col items-center gap-4 pt-24 pb-10">
-        <PostForm post={newPost} autorprops={autor} autorset={setAutor} conteudoprops={conteudo} conteudoset={setConteudo}/> 
-
-        {carregando ? (
-          <p className="text-white">Carregando...</p>
-        ) : posts.length === 0 ? (
-          <p className="text-white">Nenhum post encontrado.</p>
-        ) : (
-          [...posts].reverse().map((post) => (
-            <div key={post.id} className="w-125 flex flex-col items-center justify-evenly border-[0.05rem] border-white/50 px-5 py-3 hover:scale-110">
-              <div className="w-full items-start">
-                <p className="text-white font-bold text-[0.60rem]">~ {post.autor}</p>
-              </div>
-
-              <div className="my-5">
-                <p className="text-white font-bold text-[0.80rem]">{post.conteudo}</p>
-              </div>
-
-              <div className="w-full flex items-center justify-evenly">
-                <a className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">concordar</a>
-                <a className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">discordar</a>
-                <a className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">cooperar</a>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  )
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route 
+                    path="/login" 
+                    element={
+                        <Login 
+                            loginSucess={(nome) => { 
+                                setAuth(true); 
+                                setUserLogado(nome); 
+                            }} 
+                        />
+                    } 
+                />
+                <Route path="/feed" element={auth ? <Feed usuario={userLogado}/> : <Navigate to="/login" />}/>
+                <Route path="/" element={auth ? <Feed /> : <Navigate to="/login" />}/>
+            </Routes>
+        </BrowserRouter>
+    )
 }
 
 export default App

@@ -8,33 +8,51 @@
 </head>
 
 <body>
-    <h1>Feed teste rede social</h1>
-    <button onclick="carregarPosts()">Carregar posts do backend</button>
-    <div id="post_area">
-
-    </div>
-    <hr>
-    <h3>Criar um novo post</h3>
-    <form id="form-post" onsubmit="newPost()">
-        <input type="text" id="autor" placeholder="Seu nome" required><br><br>
-        <textarea id="conteudo" placeholder="O que você está pensando?" required></textarea><br><br>
-        <button type="submit">Publicar</button>
+    
+    <form id="login">
+        <label for="user">Usuario:</label>
+        <input type="text" name="user" id="userLogin">
+        <label for="senha">Senha:</label>
+        <input type="password" name="senha" id="userSenha">
+        <button type="submit">entrar</button>
     </form>
-    <hr>
+
+    <div id="container"></div>
 
     <script>
-        async function login_test() {
+        const container = document.getElementById("container")
+        const formLogin = document.getElementById("login")
 
-            const resp = await fetch('http://127.0.0.1:8000/users')
-            const data = await data.json()
+        formLogin.addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-            if(data.ok){
-                log(data)
-        }
+            const user = document.getElementById("userLogin").value
+            const senha = document.getElementById("userSenha").value
 
-    }
+            try {
+                const res = await fetch("http://127.0.0.1:8000/users");
 
-        login_test()
+                
+                if(!res.ok){
+                    console.log("ERRADO", validation.status)
+                }
+                
+                const validation = await res.json()
+
+                console.log(validation)
+
+                validation.map((item) => {
+                    if(item.login == user && item.senha == senha){
+                        container.innerHTML = `<h1>Parabéns, você é realmente capaz</h1><br><h1>${user} entrou!</h1>`
+                    } else{
+                        container.innerHTML = "Falta algo..."
+                    }
+                })
+
+            } catch (error) {
+                console.error(error)
+            }
+        })
 
     </script>
 </body>

@@ -18,7 +18,11 @@ app.add_middleware(
 )
 
 posts_db = [
-    {"id": 1, "autor": "Maria", "conteudo": "Estudando muito hoje!"},
+    {
+        "id": 1, 
+        "autor": "Maria", 
+        "conteudo": "Estudando muito hoje!",
+    },
     {"id": 2, "autor": "Nath", "conteudo": "O dia está lindo!"}
 ]
 
@@ -29,6 +33,10 @@ users_db = [
 class PostCreate(BaseModel):
     autor: str
     conteudo: str
+
+class CoopPost(BaseModel):
+    autor: str
+    
 
 class UserCreate(BaseModel):
     login: str
@@ -67,3 +75,4 @@ def criar_user(user: UserCreate):
     users_db.append(novo_user)
 
     return {"mensagem": "Novo usuário cadastrado!", "user": novo_user}
+
