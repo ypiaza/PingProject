@@ -62,7 +62,7 @@ const Login = ({ loginSucess }) => {
                 <input type="text" onChange={(e) => setLogin(e.target.value)} className="w-full bg-zinc-800/80 border border-white/20 px-3 py-1.5 text-white text-[0.80rem] placeholder:text-zinc-500 focus:outline-none focus:border-white/60 transition-colors"
                  />
                 <label className="text-white/75 text-[0.60rem] font-bold tracking-wider">senha: </label>
-                <input type="text" onChange={(e) => setSenha(e.target.value)} className="w-full bg-zinc-800/80 border border-white/20 px-3 py-1.5 text-white text-[0.80rem] placeholder:text-zinc-500 focus:outline-none focus:border-white/60 transition-colors"
+                <input type="password" onChange={(e) => setSenha(e.target.value)} className="w-full bg-zinc-800/80 border border-white/20 px-3 py-1.5 text-white text-[0.80rem] placeholder:text-zinc-500 focus:outline-none focus:border-white/60 transition-colors"
                     />
                 <button type="submit" className="w-full mt-1 bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold text-[0.70rem] py-2 transition-all duration-100 tracking-wider active:scale-[0.99]">Entrar</button>
             </form>
