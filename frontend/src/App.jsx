@@ -5,8 +5,19 @@ import { useState } from "react"
 
 
 const App = () => {
-    const [auth, setAuth] = useState(false);
-    const [userLogado, setUserLogado] = useState('');
+    const [userLogado, setUserLogado] = useState(() => {
+        return localStorage.getItem("usuario") || "";
+    });
+
+    const [auth, setAuth] = useState(() => {
+        return !!localStorage.getItem("usuario");
+    });
+
+    const handleLoginSucess = (nome) => {
+        setAuth(true);
+        setUserLogado(nome);
+        localStorage.setItem("usuario", nome); // 
+    };
 
     return (
         <BrowserRouter>
@@ -15,10 +26,8 @@ const App = () => {
                     path="/login" 
                     element={
                         <Login 
-                            loginSucess={(nome) => { 
-                                setAuth(true); 
-                                setUserLogado(nome); 
-                            }} 
+                            loginSucess={handleLoginSucess 
+                            } 
                         />
                     } 
                 />

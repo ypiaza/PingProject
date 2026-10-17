@@ -21,6 +21,12 @@ const Feed = ({ usuario }) => {
 
   useEffect(() => {
     carregarPosts();
+
+    const atualizar_feed = setInterval(() => {
+      carregarPosts();      
+    }, 500);
+
+    return () => clearInterval(atualizar_feed)
   }, [])
 
   const newPost = async (event) => {
@@ -35,7 +41,6 @@ const Feed = ({ usuario }) => {
         body: JSON.stringify({ autor: autor, conteudo: conteudo })
       })
       if (resposta) {
-        setAutor('');
         setConteudo('');
 
         carregarPosts();
@@ -52,7 +57,6 @@ const Feed = ({ usuario }) => {
     <div className="h-screen w-full bg-zinc-800 flex flex-col overflow-hidden">
       <div className="px-6 py-3 fixed w-full flex items-center justify-between backdrop-blur-2xl border-b border-white/10">
         <h1 className="font-bold text-2xl text-white">P!</h1>
-        <a className="text-white font-bold" href="/">Feed</a>
         <span className="text-white/80 text-sm">Logado como <strong className="text-white">~{usuario || "Visitante"}</strong></span>
       </div>
 
@@ -65,7 +69,7 @@ const Feed = ({ usuario }) => {
           <p className="text-white">Nenhum post encontrado.</p>
         ) : (
           [...posts].reverse().map((post) => (
-            <div key={post.id} className="w-125 flex flex-col items-center justify-evenly border-[0.05rem] border-white/50 px-5 py-3 hover:scale-110">
+            <div key={post.id} className="w-125 flex flex-col items-center justify-evenly border-[0.05rem] border-white/50 px-5 py-3">
               <div className="w-full items-start">
                 <p className="text-white font-bold text-[0.60rem]">~ {post.autor}</p>
               </div>
