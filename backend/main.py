@@ -67,12 +67,13 @@ def users_list():
 
 @app.post("/users")
 def criar_user(user: UserCreate):
+
     novo_user = {
         "login": user.login,
         "senha": user.senha
     }
-
     users_db.append(novo_user)
+
 
     return {"mensagem": "Novo usuário cadastrado!", "user": novo_user}
 

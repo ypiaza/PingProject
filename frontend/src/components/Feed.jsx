@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react"
 import PostForm from "./PostForm";
 
-const Feed = ({ usuario }) => {
+const Feed = ({ usuario, Logout }) => {
   const [posts, setPosts] = useState([]);
-  const [autor, setAutor] = useState(usuario);
+  const [autor, setAutor] = useState(usuario || "visitante");
   const [conteudo, setConteudo] = useState('');
   const [carregando, setCarregando] = useState(true)
 
@@ -57,7 +57,8 @@ const Feed = ({ usuario }) => {
     <div className="h-screen w-full bg-zinc-800 flex flex-col overflow-hidden">
       <div className="px-6 py-3 fixed w-full flex items-center justify-between backdrop-blur-2xl border-b border-white/10">
         <h1 className="font-bold text-2xl text-white">P!</h1>
-        <span className="text-white/80 text-sm">Logado como <strong className="text-white">~{usuario || "Visitante"}</strong></span>
+        <span className="text-white/80 text-sm">Logado como <strong className="text-white">~{usuario || "visitante"}</strong></span>
+        <button className="text-white font-bold text-sm cursor-pointer" onClick={Logout}>Sair</button>
       </div>
 
       <div className="w-full flex-1 overflow-y-auto flex flex-col items-center gap-4 pt-24 pb-10">

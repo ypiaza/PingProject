@@ -6,18 +6,24 @@ import { useState } from "react"
 
 const App = () => {
     const [userLogado, setUserLogado] = useState(() => {
-        return localStorage.getItem("usuario") || "";
+        return localStorage.getItem("logado");
     });
 
     const [auth, setAuth] = useState(() => {
-        return !!localStorage.getItem("usuario");
+        return !!localStorage.getItem("logado");
     });
 
     const handleLoginSucess = (nome) => {
         setAuth(true);
         setUserLogado(nome);
-        localStorage.setItem("usuario", nome); // 
+        localStorage.setItem("logado", nome);
     };
+
+    const handleLogout = () => {
+        setAuth(false);
+        setUserLogado(null);
+        localStorage.setItem(null);
+    }
 
     return (
         <BrowserRouter>
@@ -27,11 +33,11 @@ const App = () => {
                     element={
                         <Login 
                             loginSucess={handleLoginSucess 
-                            } 
+                            } cadastroSucess={handleLoginSucess}
                         />
                     } 
                 />
-                <Route path="/feed" element={auth ? <Feed usuario={userLogado}/> : <Navigate to="/login" />}/>
+                <Route path="/feed" element={auth ? <Feed usuario={userLogado} Logout={handleLogout}/> : <Navigate to="/login" />}/>
                 <Route path="/" element={auth ? <Feed /> : <Navigate to="/login" />}/>
             </Routes>
         </BrowserRouter>
