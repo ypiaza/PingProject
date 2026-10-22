@@ -1,8 +1,7 @@
-import { BrowserRouter, data, Navigate, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import Feed from "./components/Feed"
 import Login from "./components/Login"
 import { useState } from "react"
-
 
 const App = () => {
     const [userLogado, setUserLogado] = useState(() => {
@@ -22,7 +21,8 @@ const App = () => {
     const handleLogout = () => {
         setAuth(false);
         setUserLogado(null);
-        localStorage.setItem(null);
+        // CORRIGIDO: Removido o item corretamente do localStorage
+        localStorage.removeItem("logado");
     }
 
     return (
@@ -32,13 +32,18 @@ const App = () => {
                     path="/login" 
                     element={
                         <Login 
-                            loginSucess={handleLoginSucess 
-                            } cadastroSucess={handleLoginSucess}
+                            loginSucess={handleLoginSucess} 
                         />
                     } 
                 />
-                <Route path="/feed" element={auth ? <Feed usuario={userLogado} Logout={handleLogout}/> : <Navigate to="/login" />}/>
-                <Route path="/" element={auth ? <Feed /> : <Navigate to="/login" />}/>
+                <Route 
+                    path="/feed" 
+                    element={auth ? <Feed usuario={userLogado} Logout={handleLogout} /> : <Navigate to="/login" />} 
+                />
+                <Route 
+                    path="/" 
+                    element={auth ? <Feed usuario={userLogado} Logout={handleLogout} /> : <Navigate to="/login" />} 
+                />
             </Routes>
         </BrowserRouter>
     )

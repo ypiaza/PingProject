@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 
 
-const Login = ({ loginSucess, cadastroSucess }) => {
+const Login = ({ loginSucess }) => {
     const [users, setUsers] = useState([]);
     const [login, setLogin] = useState('');
     const [newLogin, setNewLogin] = useState('');
@@ -34,23 +34,24 @@ const Login = ({ loginSucess, cadastroSucess }) => {
         usersForLogin()
     }, [])
 
-    const cadastrarUser = async () => {
+    const cadastrarUser = async (e) => {
+        e.preventDefault();
+
         try {
-            await fetch("http://127.0.0.1:8000/users", {
+            const resposta = await fetch("http://127.0.0.1:8000/users", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON({login: newLogin, senha: newSenha})
+                body: JSON.stringify({login: newLogin, senha: newSenha})
             })
             
-            const userValid = login
-
-            if(cadastroSucess){
-                cadastroSucess(userValid)
+            if(resposta) {
+                console.log("Usuário cadastrado com sucesso!")
+                setNewLogin('');
+                setNewSenha('');
             }
 
-            navigate("/feed")
         } catch (error) {
             console.error(error)
         }
@@ -60,21 +61,20 @@ const Login = ({ loginSucess, cadastroSucess }) => {
         event.preventDefault();
 
         try {
-            users.find((item) => {
-                if (item.login === login && item.senha == senha) {
+            const usuarioEncontrado = users.find((item) => item.login === login && item.senha === senha);
+                
+                
+                if (usuarioEncontrado) {
                     console.log("OK")
 
-                    const userValid = item.login
-
                     if (loginSucess) {
-                        loginSucess(userValid);
+                        loginSucess(usuarioEncontrado.login);
                     }
 
                     navigate("/feed")
                 } else {
                     console.log("Erro")
                 }
-            })
 
         } catch (error) {
             console.error(error)

@@ -70,9 +70,9 @@ const Feed = ({ usuario, Logout }) => {
           <p className="text-white">Nenhum post encontrado.</p>
         ) : (
           [...posts].reverse().map((post) => (
-            <div key={post.id} className="w-125 flex flex-col items-center justify-evenly border-[0.05rem] border-white/50 px-5 py-3">
+            <div key={post.id} className="w-125 flex flex-col items-center justify-evenly border-b-[0.05rem] border-b-white/30 rounded px-5 py-3">
               <div className="w-full items-start">
-                <p className="text-white font-bold text-[0.60rem]">~ {post.autor}</p>
+                <p className="text-white font-bold text-[0.60rem]">~{post.autor}</p>
               </div>
 
               <div className="my-5">

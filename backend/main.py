@@ -18,12 +18,26 @@ app.add_middleware(
 )
 
 posts_db = [
-    {
-        "id": 1, 
-        "autor": "Maria", 
-        "conteudo": "Estudando muito hoje!",
-    },
-    {"id": 2, "autor": "Nath", "conteudo": "O dia está lindo!"}
+  {
+    "id": 1,
+    "autor": "Lucas",
+    "conteudo": "Acredito que o trabalho 100% remoto pode prejudicar a cultura de inovação da empresa no longo prazo, pois perde-se a troca espontânea de ideias no café. O que vocês acham: o modelo híbrido é o equilíbrio perfeito ou dá pra inovar totalmente à distância?"
+  },
+  {
+    "id": 2,
+    "autor": "Camila",
+    "conteudo": "Na minha opinião, aprender uma segunda língua com Inteligência Artificial é muito mais eficiente do que o método tradicional de escolas de idiomas, pois você pratica sem vergonha de errar. Alguém já tentou esse método ou prefere a interação humana na sala de aula?"
+  },
+  {
+    "id": 3,
+    "autor": "Rafael",
+    "conteudo": "Penso que livros físicos oferecem uma retenção de conteúdo e um foco muito maiores do que e-readers como o Kindle, mesmo sendo menos práticos para carregar. Mais alguém sente essa diferença na absorção da leitura ou é só saudosismo da minha parte?"
+  },
+  {
+    "id": 4,
+    "autor": "Beatriz",
+    "conteudo": "Acho que todo desenvolvedor iniciante deveria focar primeiro em lógica e estrutura de dados pura antes de aprender qualquer framework famoso (como React ou Angular). Quem já está na área concorda com essa base ou acha melhor ir direto pra prática com frameworks?"
+  }
 ]
 
 users_db = [
