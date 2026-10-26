@@ -9,11 +9,13 @@ const Login = ({ loginSucess }) => {
     const [senha, setSenha] = useState('');
     const [newSenha, setNewSenha] = useState('');
 
+    const API_URL = "https://pingprojectbackend.onrender.com";
+    
     const navigate = useNavigate();
 
     const usersForLogin = async () => {
         try {
-            const resposta = await fetch("http://127.0.0.1:8000/users")
+            const resposta = await fetch("${API_URL}/users")
 
             if (!resposta.ok) {
                 throw new Error("Deu ruim, mané!", resposta.status);
@@ -38,7 +40,7 @@ const Login = ({ loginSucess }) => {
         e.preventDefault();
 
         try {
-            const resposta = await fetch("http://127.0.0.1:8000/users", {
+            const resposta = await fetch("${API_URL}/users", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
