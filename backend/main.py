@@ -1,93 +1,76 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from database import SessionLocal, engine
+import models
+
+# cria as tabelas automaticamente se elas ainda não existirem
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-origins = [
-    "http://127.0.0.1:5500",
-    "http://localhost:5173"
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Permite todos os métodos (GET, POST, etc)
-    allow_headers=["*"],  # Permite todos os headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-posts_db = [
-  {
-    "id": 1,
-    "autor": "Lucas",
-    "conteudo": "Acredito que o trabalho 100% remoto pode prejudicar a cultura de inovação da empresa no longo prazo, pois perde-se a troca espontânea de ideias no café. O que vocês acham: o modelo híbrido é o equilíbrio perfeito ou dá pra inovar totalmente à distância?"
-  },
-  {
-    "id": 2,
-    "autor": "Camila",
-    "conteudo": "Na minha opinião, aprender uma segunda língua com Inteligência Artificial é muito mais eficiente do que o método tradicional de escolas de idiomas, pois você pratica sem vergonha de errar. Alguém já tentou esse método ou prefere a interação humana na sala de aula?"
-  },
-  {
-    "id": 3,
-    "autor": "Rafael",
-    "conteudo": "Penso que livros físicos oferecem uma retenção de conteúdo e um foco muito maiores do que e-readers como o Kindle, mesmo sendo menos práticos para carregar. Mais alguém sente essa diferença na absorção da leitura ou é só saudosismo da minha parte?"
-  },
-  {
-    "id": 4,
-    "autor": "Beatriz",
-    "conteudo": "Acho que todo desenvolvedor iniciante deveria focar primeiro em lógica e estrutura de dados pura antes de aprender qualquer framework famoso (como React ou Angular). Quem já está na área concorda com essa base ou acha melhor ir direto pra prática com frameworks?"
-  }
-]
-
-users_db = [
-    {"login": "yuri", "senha": "1234"}
-]
-
-class PostCreate(BaseModel):
-    autor: str
-    conteudo: str
-
-class CoopPost(BaseModel):
-    autor: str
-    
-
-class UserCreate(BaseModel):
-    login: str
-    senha: str
+# Função auxiliar (Dependência) para abrir e fechar a conexão com o banco a cada requisição
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
-@app.get("/posts")
-def listar_posts():
-    return posts_db
-
-@app.post("/posts")
-def criar_post(post: PostCreate):
-    novo_id = len(posts_db) + 1
-
-    novo_post = {
-        "id": novo_id,
-        "autor": post.autor,
-        "conteudo": post.conteudo
-    }
-
-    posts_db.append(novo_post)
-
-    return  {"mensagem": "Post criado com sucesso!", "post": novo_post}
+# usuarios
 
 @app.get("/users")
-def users_list():
-    return users_db
+def listar_usuarios(db: Session = Depends(get_db)):
+    # Busca todos os usuários cadastrados na tabela 'users' do Supabase
+    usuarios = db.query(models.UserModel).all()
+    return usuarios
+
 
 @app.post("/users")
-def criar_user(user: UserCreate):
+def cadastrar_usuario(dados: dict, db: Session = Depends(get_db)):
+    # 1. Cria a instância do novo usuário no formato da tabela
+    novo_usuario = models.UserModel(
+        login=dados["login"], 
+        senha=dados["senha"]
+    )
+    
+    # 2. Adiciona e salva no Supabase
+    db.add(novo_usuario)
+    db.commit()
+    db.refresh(novo_usuario)
+    
+    return {"mensagem": "Usuário cadastrado com sucesso!", "user": novo_usuario}
 
-    novo_user = {
-        "login": user.login,
-        "senha": user.senha
-    }
-    users_db.append(novo_user)
+
+# posts
+
+@app.get("/posts")
+def listar_posts(db: Session = Depends(get_db)):
+    # Busca todos os posts da tabela 'posts' do Supabase
+    posts = db.query(models.PostModel).all()
+    return posts
 
 
-    return {"mensagem": "Novo usuário cadastrado!", "user": novo_user}
-
+@app.post("/posts")
+def criar_post(dados: dict, db: Session = Depends(get_db)):
+    # 1. Cria a instância do novo post
+    novo_post = models.PostModel(
+        autor=dados["autor"], 
+        conteudo=dados["conteudo"]
+    )
+    
+    # 2. Adiciona e salva no Supabase
+    db.add(novo_post)
+    db.commit()
+    db.refresh(novo_post)
+    
+    return {"mensagem": "Post publicado com sucesso!", "post": novo_post}
