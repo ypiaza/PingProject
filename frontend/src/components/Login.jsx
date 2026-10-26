@@ -15,7 +15,7 @@ const Login = ({ loginSucess }) => {
 
     const usersForLogin = async () => {
         try {
-            const resposta = await fetch("${API_URL}/users")
+            const resposta = await fetch(`${API_URL}/users`)
 
             if (!resposta.ok) {
                 throw new Error("Deu ruim, mané!", resposta.status);
@@ -40,7 +40,7 @@ const Login = ({ loginSucess }) => {
         e.preventDefault();
 
         try {
-            const resposta = await fetch("${API_URL}/users", {
+            const resposta = await fetch(`${API_URL}/users`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

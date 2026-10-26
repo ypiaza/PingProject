@@ -11,7 +11,7 @@ const Feed = ({ usuario, Logout }) => {
 
   const carregarPosts = async () => {
     try {
-      const resposta = await fetch('${API_URL}/posts');
+      const resposta = await fetch(`${API_URL}/posts`);
       const posts = await resposta.json();
       setPosts(posts);
     } catch (error) {
@@ -35,7 +35,7 @@ const Feed = ({ usuario, Logout }) => {
     event.preventDefault();
 
     try {
-      const resposta = fetch('${API_URL}/posts', {
+      const resposta = fetch(`${API_URL}/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
