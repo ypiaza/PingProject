@@ -7,9 +7,11 @@ const Feed = ({ usuario, Logout }) => {
   const [conteudo, setConteudo] = useState('');
   const [carregando, setCarregando] = useState(true)
 
+  const API_URL = "https://pingprojectbackend.onrender.com";
+
   const carregarPosts = async () => {
     try {
-      const resposta = await fetch('http://127.0.0.1:8000/posts');
+      const resposta = await fetch('${API_URL}/posts');
       const posts = await resposta.json();
       setPosts(posts);
     } catch (error) {
@@ -33,7 +35,7 @@ const Feed = ({ usuario, Logout }) => {
     event.preventDefault();
 
     try {
-      const resposta = fetch('http://127.0.0.1:8000/posts', {
+      const resposta = fetch('${API_URL}/posts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
