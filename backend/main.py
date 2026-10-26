@@ -20,7 +20,7 @@ app.add_middleware(
 origins = [
     "http://127.0.0.1:5500",
     "http://localhost:5753",
-    "https://pingsocial-project.vercel.app"
+    "https://pingsocial-project.vercel.app/"
 ]
 
 # Função auxiliar (Dependência) para abrir e fechar a conexão com o banco a cada requisição
