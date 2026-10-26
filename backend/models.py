@@ -16,3 +16,12 @@ class PostModel(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     autor = Column(String)
     conteudo = Column(String)
+
+# Tabela Cooperar
+class CommentModel(Base):
+    __tablename__ = "comments"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    post_id = Column(Integer)  
+    autor = Column(String)     
+    conteudo = Column(String)  

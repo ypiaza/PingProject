@@ -19,7 +19,7 @@ app.add_middleware(
 
 origins = [
     "http://127.0.0.1:5500",
-    "http://localhost:5753",
+    "http://localhost:5173",
     "https://pingsocial-project.vercel.app/"
 ]
 
@@ -80,3 +80,22 @@ def criar_post(dados: dict, db: Session = Depends(get_db)):
     db.refresh(novo_post)
     
     return {"mensagem": "Post publicado com sucesso!", "post": novo_post}
+
+@app.get("/posts/{post_id}/comments")
+def listar_comentarios(post_id: int, db: Session = Depends(get_db)):
+    comentarios = db.query(models.CommentModel).filter(models.CommentModel.post_id == post_id).all()
+    return comentarios
+
+@app.post("/posts/{post_id}/comments")
+def criar_comentario(post_id: int, dados: dict, db: Session = Depends(get_db)):
+    novo_comentario = models.CommentModel(
+        post_id=post_id,
+        autor=dados["autor"],
+        conteudo=dados["conteudo"]
+    )
+    
+    db.add(novo_comentario)
+    db.commit()
+    db.refresh(novo_comentario)
+    
+    return {"mensagem": "Cooperado com sucesso!", "comment": novo_comentario}

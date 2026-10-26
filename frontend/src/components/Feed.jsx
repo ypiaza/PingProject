@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import PostForm from "./PostForm";
+import CommentSection from "./CommentSection";
 
 const Feed = ({ usuario, Logout }) => {
   const [posts, setPosts] = useState([]);
@@ -35,16 +36,15 @@ const Feed = ({ usuario, Logout }) => {
     event.preventDefault();
 
     try {
-      const resposta = fetch(`${API_URL}/posts`, {
+      const resposta = await fetch(`${API_URL}/posts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ autor: autor, conteudo: conteudo })
       })
-      if (resposta) {
+      if (resposta.ok) {
         setConteudo('');
-
         carregarPosts();
       } else {
         alert('Erro ao publicar!');
@@ -57,7 +57,7 @@ const Feed = ({ usuario, Logout }) => {
 
   return (
     <div className="h-screen w-full bg-zinc-800 flex flex-col overflow-hidden">
-      <div className="px-6 py-3 fixed w-full flex items-center justify-between backdrop-blur-2xl border-b border-white/10">
+      <div className="px-6 py-3 fixed w-full flex items-center justify-between backdrop-blur-2xl border-b border-white/10 z-100">
         <h1 className="font-bold text-2xl text-white">P!</h1>
         <span className="text-white/80 text-sm">Logado como <strong className="text-white">~{usuario || "visitante"}</strong></span>
         <button className="text-white font-bold text-sm cursor-pointer" onClick={Logout}>Sair</button>
@@ -72,7 +72,7 @@ const Feed = ({ usuario, Logout }) => {
           <p className="text-white">Nenhum post encontrado.</p>
         ) : (
           [...posts].reverse().map((post) => (
-            <div key={post.id} className="w-125 flex flex-col items-center justify-evenly border-b-[0.05rem] border-b-white/30 rounded px-5 py-3">
+            <div key={post.id} className="w-full md:w-150 flex flex-col items-center justify-evenly border-[0.05rem] border-white/30 rounded px-5 py-3">
               <div className="w-full items-start">
                 <p className="text-white font-bold text-[0.60rem]">~{post.autor}</p>
               </div>
@@ -81,10 +81,11 @@ const Feed = ({ usuario, Logout }) => {
                 <p className="text-white font-bold text-[0.80rem]">{post.conteudo}</p>
               </div>
 
+              <CommentSection postId={post.id} currentUser={usuario} /> 
+
               <div className="w-full flex items-center justify-evenly">
                 <a className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">concordar</a>
                 <a className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">discordar</a>
-                <a className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">cooperar</a>
               </div>
             </div>
           ))
