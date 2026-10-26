@@ -17,6 +17,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+origins = [
+    "http://127.0.0.1:5500",
+    "http://localhost:5753",
+    "https://pingsocial-project.vercel.app"
+]
+
 # Função auxiliar (Dependência) para abrir e fechar a conexão com o banco a cada requisição
 def get_db():
     db = SessionLocal()
