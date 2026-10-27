@@ -19,10 +19,8 @@ const CommentSection = ({ postId, currentUser }) => {
     };
 
     useEffect(() => {
-        if (isOpen) {
             fetchComments();
-        }
-    }, [isOpen]);
+    },[]);
 
     const handleCooperar = async (e) => {
         e.preventDefault();
