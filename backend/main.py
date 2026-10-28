@@ -100,15 +100,22 @@ def criar_comentario(post_id: int, dados: dict, db: Session = Depends(get_db)):
     
     return {"mensagem": "Cooperado com sucesso!", "comment": novo_comentario}
 
-@app.post("/posts/{post_id}/interations")
-def criar_interacao(post_id: int, db: Session = Depends(get_db)):
-    nova_interacao = models.InterationModel(
-        post_id=post_id,
-        concordar_action=concordar_action(len(concordar_action)),
-        discordar_action=concordar_action(len(concordar_action)),
-    )
+@app.put("/posts/{post_id}/concordar")
+def concordar_post(post_id: int, db: Session = Depends(get_db)):
+    post = db.query(models.PostModel).filter(models.PostModel.id == post_id).first()
+    if post:
+        post.concordar_count += 1
+        db.commit()
+        db.refresh(post)
+    return post
 
-    db.add(nova_interacao)
-    db.commit()
-    db.refresh(nova_interacao)
+@app.put("/posts/{post_id}/discordar")
+def discordar_post(post_id: int, db: Session = Depends(get_db)):
+    post = db.query(models.PostModel).filter(models.PostModel.id == post_id).first()
+    if post:
+        post.discordar_count += 1
+        db.commit()
+        db.refresh(post)
+    return post
+
     

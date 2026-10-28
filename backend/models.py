@@ -30,8 +30,8 @@ class CommentModel(Base):
 
 class InterationModel(Base):
     __tablename__ = "interations"
-
+    
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    post_id = Column(Integer)
-    concordar_action = Column(Integer)
-    discordar_action = Column(Integer)
+    post_id = Column(Integer, index=True)
+    concordar_count = Column(Integer, default=0)
+    discordar_count = Column(Integer, default=0)
