@@ -25,3 +25,13 @@ class CommentModel(Base):
     post_id = Column(Integer)  
     autor = Column(String)     
     conteudo = Column(String)  
+
+# Tabela concordar/discordar
+
+class InterationModel(Base):
+    __tablename__ = "interations"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    post_id = Column(Integer)
+    concordar_action = Column(Integer)
+    discordar_action = Column(Integer)
