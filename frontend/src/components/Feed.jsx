@@ -55,6 +55,25 @@ const Feed = ({ usuario, Logout }) => {
     }
   };
 
+
+  const reagirPost = async (PostId, tipo) => {
+    try {
+      const resp = await fetch(`${API_URL}/posts/${PostId}/${tipo}`,{
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      })
+      
+      if(resp.ok){
+        carregarPosts()
+      }
+
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <div className="h-screen w-full bg-zinc-800 flex flex-col overflow-hidden">
       <div className="px-6 py-3 fixed w-full flex items-center justify-between backdrop-blur-2xl border-b border-white/10 z-100">
@@ -84,8 +103,8 @@ const Feed = ({ usuario, Logout }) => {
               <CommentSection postId={post.id} currentUser={usuario} /> 
 
               <div className="w-full flex items-center justify-evenly">
-                <a className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">concordar</a>
-                <a className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">discordar</a>
+                <button onClick={() => reagirPost(post.id, "concordar")} className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">concordar ({post.concordar_count})</button>
+                <button onClick={() => reagirPost(post.id, "discordar")} className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">discordar ({post.concordar_count})</button>
               </div>
             </div>
           ))

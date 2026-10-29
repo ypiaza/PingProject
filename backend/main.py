@@ -102,7 +102,7 @@ def criar_comentario(post_id: int, dados: dict, db: Session = Depends(get_db)):
 
 @app.put("/posts/{post_id}/concordar")
 def concordar_post(post_id: int, db: Session = Depends(get_db)):
-    post = db.query(models.PostModel).filter(models.PostModel.id == post_id).first()
+    post = db.query(models.InterationModel).filter(models.CommentModel.id == post_id).first()
     if post:
         post.concordar_count += 1
         db.commit()
@@ -111,7 +111,7 @@ def concordar_post(post_id: int, db: Session = Depends(get_db)):
 
 @app.put("/posts/{post_id}/discordar")
 def discordar_post(post_id: int, db: Session = Depends(get_db)):
-    post = db.query(models.PostModel).filter(models.PostModel.id == post_id).first()
+    post = db.query(models.InterationModel).filter(models.CommentModel.id == post_id).first()
     if post:
         post.discordar_count += 1
         db.commit()
