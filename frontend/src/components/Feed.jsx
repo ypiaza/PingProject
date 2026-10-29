@@ -26,7 +26,7 @@ const Feed = ({ usuario, Logout }) => {
     carregarPosts();
 
     const atualizar_feed = setInterval(() => {
-      carregarPosts();      
+      carregarPosts();
     }, 500);
 
     return () => clearInterval(atualizar_feed)
@@ -58,14 +58,14 @@ const Feed = ({ usuario, Logout }) => {
 
   const reagirPost = async (PostId, tipo) => {
     try {
-      const resp = await fetch(`${API_URL}/posts/${PostId}/${tipo}`,{
+      const resp = await fetch(`${API_URL}/posts/${PostId}/${tipo}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         }
       })
-      
-      if(resp.ok){
+
+      if (resp.ok) {
         carregarPosts()
       }
 
@@ -100,11 +100,16 @@ const Feed = ({ usuario, Logout }) => {
                 <p className="text-white font-bold text-[0.80rem]">{post.conteudo}</p>
               </div>
 
-              <CommentSection postId={post.id} currentUser={usuario} /> 
+              <CommentSection postId={post.id} currentUser={usuario} />
 
               <div className="w-full flex items-center justify-evenly">
-                <button onClick={() => reagirPost(post.id, "concordar")} className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">concordar ({post.concordar_count})</button>
-                <button onClick={() => reagirPost(post.id, "discordar")} className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100" href="/">discordar ({post.concordar_count})</button>
+                <button onClick={() => reagirPost(post.id, "concordar")} className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100">
+                  concordar ({post.concordar_count})
+                </button>
+
+                <button onClick={() => reagirPost(post.id, "discordar")} className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100">
+                  discordar ({post.discordar_count})  {/* <-- Correção aqui */}
+                </button>
               </div>
             </div>
           ))
