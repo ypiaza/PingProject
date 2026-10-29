@@ -108,7 +108,7 @@ const Feed = ({ usuario, Logout }) => {
                 </button>
 
                 <button onClick={() => reagirPost(post.id, "discordar")} className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100">
-                  discordar ({post.discordar_count})  {/* <-- Correção aqui */}
+                  discordar ({post.discordar_count}) 
                 </button>
               </div>
             </div>
