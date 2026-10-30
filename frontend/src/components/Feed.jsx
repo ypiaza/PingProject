@@ -103,11 +103,11 @@ const Feed = ({ usuario, Logout }) => {
               <CommentSection postId={post.id} currentUser={usuario} />
 
               <div className="w-full flex items-center justify-evenly">
-                <button onClick={() => reagirPost(post.id, "concordar")} className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100">
+                <button onClick={() => reagirPost(post.id, "concordar")} className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100 cursor-pointer">
                   concordar ({post.concordar_count})
                 </button>
 
-                <button onClick={() => reagirPost(post.id, "discordar")} className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100">
+                <button onClick={() => reagirPost(post.id, "discordar")} className="text-white/75 font-bold text-[0.60rem] hover:text-white duration-100 cursor-pointer">
                   discordar ({post.discordar_count}) 
                 </button>
               </div>
