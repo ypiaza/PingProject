@@ -34,5 +34,5 @@ class InterationModel(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     post_id = Column(Integer, index=True)
     tipo = Column(String)
-    concordar_count = Column(Integer, default=0)
-    discordar_count = Column(Integer, default=0)
+    concordar_count = Column(Integer)
+    discordar_count = Column(Integer)
