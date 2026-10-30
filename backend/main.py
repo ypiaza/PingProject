@@ -100,7 +100,7 @@ def criar_comentario(post_id: int, dados: dict, db: Session = Depends(get_db)):
     
     return {"mensagem": "Cooperado com sucesso!", "comment": novo_comentario}
 
-@app.put("/posts/{post_id}/concordar")
+@app.put("/posts/{post_id}/interations/concordar")
 def concordar_post(post_id: int, db: Session = Depends(get_db)):
     post = db.query(models.PostModel).filter(models.PostModel.id == post_id).first()
     if post:
@@ -109,7 +109,7 @@ def concordar_post(post_id: int, db: Session = Depends(get_db)):
         db.refresh(post)
     return post
 
-@app.put("/posts/{post_id}/discordar")
+@app.put("/posts/{post_id}/interations/discordar")
 def discordar_post(post_id: int, db: Session = Depends(get_db)):
     post = db.query(models.PostModel).filter(models.PostModel.id == post_id).first()
     if post:
