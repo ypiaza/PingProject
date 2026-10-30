@@ -58,7 +58,7 @@ const Feed = ({ usuario, Logout }) => {
 
   const reagirPost = async (PostId, tipo) => {
     try {
-      const resp = await fetch(`${API_URL}/posts/${PostId}/${tipo}`, {
+      const resp = await fetch(`${API_URL}/posts/${PostId}/interations/${tipo}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
