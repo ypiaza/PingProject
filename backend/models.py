@@ -16,6 +16,8 @@ class PostModel(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     autor = Column(String)
     conteudo = Column(String)
+    concordar_count = Column(Integer, default=0)
+    discordar_count = Column(Integer, default=0)
 
 # Tabela Cooperar
 class CommentModel(Base):
@@ -26,12 +28,3 @@ class CommentModel(Base):
     autor = Column(String)     
     conteudo = Column(String)  
 
-# Tabela concordar/discordar
-
-class InterationModel(Base):
-    __tablename__ = "interations"
-    
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    post_id = Column(Integer, index=True)
-    concordar_count = Column(Integer)
-    discordar_count = Column(Integer)
