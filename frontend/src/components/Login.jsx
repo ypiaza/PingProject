@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 
 const Login = ({ loginSucess }) => {
     const [isRegistering, setIsRegistering] = useState(false);
-    const [users, setUsers] = useState([]);
     const [login, setLogin] = useState('');
     const [newLogin, setNewLogin] = useState('');
     const [senha, setSenha] = useState('');
@@ -12,27 +11,6 @@ const Login = ({ loginSucess }) => {
     const API_URL = "https://pingprojectbackend.onrender.com";
     
     const navigate = useNavigate();
-
-    const usersForLogin = async () => {
-        try {
-            const resposta = await fetch(`${API_URL}/users`)
-
-            if (!resposta.ok) {
-                throw new Error("Deu ruim, mané!", resposta.status);
-            }
-
-            const data = await resposta.json();
-
-            setUsers(data);
-
-        } catch (error) {
-            console.error(error)
-        }
-    };
-
-    useEffect(() => {
-        usersForLogin()
-    }, [])
 
     const cadastrarUser = async (e) => {
         e.preventDefault();
@@ -43,48 +21,57 @@ const Login = ({ loginSucess }) => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({login: newLogin, senha: newSenha})
-            })
+                body: JSON.stringify({ login: newLogin, senha: newSenha })
+            });
             
-            if(resposta) {
-                console.log("Usuário cadastrado com sucesso!")
+            if (resposta.ok) {
+                alert("Usuário cadastrado com sucesso!");
                 setNewLogin('');
                 setNewSenha('');
                 setIsRegistering(false);
+            } else {
+                alert("Erro ao cadastrar. O login pode já existir.");
             }
 
         } catch (error) {
-            console.error(error)
+            console.error(error);
+            alert("Erro de conexão com o servidor.");
         }
     };
 
-    const validationLogin = (event) => {
+    const validationLogin = async (event) => {
         event.preventDefault();
 
         try {
-            const usuarioEncontrado = users.find((item) => item.login === login && item.senha === senha);
-                
-                if (usuarioEncontrado) {
-                    console.log("OK")
+            const resposta = await fetch(`${API_URL}/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ login: login, senha: senha }),
+            });
 
-                    if (loginSucess) {
-                        loginSucess(usuarioEncontrado.login);
-                    }
+            if (resposta.ok) {
+                const dados = await resposta.json();
 
-                    navigate("/feed")
-                } else {
-                    console.log("Erro")
+                if (loginSucess) {
+                    loginSucess(dados.login);
                 }
 
+                navigate("/feed");
+            } else {
+                alert("Login ou senha incorretos!");
+            }
+
         } catch (error) {
-            console.error(error)
+            console.error(error);
+            alert("Erro de conexão com o servidor.");
         }
-    }
+    };
 
     return (
         <div className="bg-zinc-950 h-screen w-full flex items-center justify-center px-4">
             <header className="font-bold text-4xl text-white/90 absolute top-0 w-full flex items-center justify-center py-10">Ping!</header>
-
 
             {!isRegistering ? (
                 <form 
@@ -117,7 +104,7 @@ const Login = ({ loginSucess }) => {
 
                     <button 
                         type="submit" 
-                        className="w-full mt-2 bg-white/10 hover:bg-white/20 active:bg-white/25 border border-white/20 rounded text-white font-bold text-[0.70rem] py-2.5 transition-all duration-200 tracking-wider uppercase active:scale-[0.99] shadow-sm"
+                        className="w-full mt-2 bg-white/10 hover:bg-white/25 active:bg-white/30 border border-white/20 rounded text-white font-bold text-[0.70rem] py-2.5 transition-all duration-200 tracking-wider uppercase cursor-pointer shadow-sm"
                     >
                         Entrar
                     </button>
@@ -125,7 +112,7 @@ const Login = ({ loginSucess }) => {
                     <button
                         type="button"
                         onClick={() => setIsRegistering(true)}
-                        className="text-white/50 hover:text-white text-[0.70rem] text-center mt-2 transition-colors uppercase tracking-wider"
+                        className="text-white/50 hover:text-white text-[0.70rem] text-center mt-2 transition-colors uppercase tracking-wider cursor-pointer"
                     >
                         Não tem conta? Cadastrar
                     </button>
@@ -161,7 +148,7 @@ const Login = ({ loginSucess }) => {
 
                     <button 
                         type="submit" 
-                        className="w-full mt-2 bg-white/10 hover:bg-white/20 active:bg-white/25 border border-white/20 rounded text-white font-bold text-[0.70rem] py-2.5 transition-all duration-200 tracking-wider uppercase active:scale-[0.99] shadow-sm"
+                        className="w-full mt-2 bg-white/10 hover:bg-white/25 active:bg-white/30 border border-white/20 rounded text-white font-bold text-[0.70rem] py-2.5 transition-all duration-200 tracking-wider uppercase cursor-pointer shadow-sm"
                     >
                         Cadastrar
                     </button>
@@ -169,7 +156,7 @@ const Login = ({ loginSucess }) => {
                     <button
                         type="button"
                         onClick={() => setIsRegistering(false)}
-                        className="text-white/50 hover:text-white text-[0.70rem] text-center mt-2 transition-colors uppercase tracking-wider"
+                        className="text-white/50 hover:text-white text-[0.70rem] text-center mt-2 transition-colors uppercase tracking-wider cursor-pointer"
                     >
                         Já tem conta? Entrar
                     </button>

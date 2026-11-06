@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 import models
+from pydantic import BaseModel
 
 # cria as tabelas automaticamente se elas ainda não existirem
 models.Base.metadata.create_all(bind=engine)
@@ -32,6 +33,18 @@ def get_db():
         db.close()
 
 
+class LoginRequest(BaseModel):
+    login: str
+    senha: str
+
+@app.post("/login")
+def fazer_login(dados: LoginRequest, db: Session = Depends(get_db)):
+    usuario_encontrado = db.query(models.UserModel).filter(models.UserModel.login == dados.login).first()
+    
+    if not usuario_encontrado or usuario_encontrado.senha != dados.senha:
+        raise HTTPException(status_code=401, detail="Login ou senha incorretos")
+        
+    return {"mensagem": "Login bem-sucedido!", "login": usuario_encontrado.login}
 # usuarios
 
 @app.get("/users")
