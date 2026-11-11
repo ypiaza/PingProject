@@ -39,7 +39,8 @@ class LoginRequest(BaseModel):
 
 @app.post("/login")
 def fazer_login(dados: LoginRequest, db: Session = Depends(get_db)):
-    usuario_encontrado = db.query(models.UserModel).filter(models.UserModel.login == dados.login).first()
+    login = dados.login.strip()
+    usuario_encontrado = db.query(models.UserModel).filter(models.UserModel.login == login).first()
     
     if not usuario_encontrado or usuario_encontrado.senha != dados.senha:
         raise HTTPException(status_code=401, detail="Login ou senha incorretos")
@@ -56,16 +57,30 @@ def listar_usuarios(db: Session = Depends(get_db)):
 
 @app.post("/users")
 def cadastrar_usuario(dados: dict, db: Session = Depends(get_db)):
+    login = str(dados.get("login", "")).strip()
+    senha = str(dados.get("senha", "")).strip()
+
+    if not login or not senha:
+        raise HTTPException(status_code=400, detail="Login e senha são obrigatórios.")
+
+    usuario_existente = db.query(models.UserModel).filter(models.UserModel.login == login).first()
+    if usuario_existente:
+        raise HTTPException(status_code=409, detail="Este login já está cadastrado.")
+
     # 1. Cria a instância do novo usuário no formato da tabela
     novo_usuario = models.UserModel(
-        login=dados["login"], 
-        senha=dados["senha"]
+        login=login, 
+        senha=senha
     )
     
     # 2. Adiciona e salva no Supabase
-    db.add(novo_usuario)
-    db.commit()
-    db.refresh(novo_usuario)
+    try:
+        db.add(novo_usuario)
+        db.commit()
+        db.refresh(novo_usuario)
+    except Exception:
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Erro ao salvar usuário no banco de dados.")
     
     return {"mensagem": "Usuário cadastrado com sucesso!", "user": novo_usuario}
 

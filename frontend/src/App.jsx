@@ -5,14 +5,17 @@ import { useState } from "react"
 
 const App = () => {
     const [userLogado, setUserLogado] = useState(() => {
-        return localStorage.getItem("logado");
+        const saved = localStorage.getItem("logado");
+        return saved && saved !== "undefined" && saved !== "null" ? saved : null;
     });
 
     const [auth, setAuth] = useState(() => {
-        return !!localStorage.getItem("logado");
+        const saved = localStorage.getItem("logado");
+        return !!(saved && saved !== "undefined" && saved !== "null");
     });
 
     const handleLoginSucess = (nome) => {
+        if (!nome) return;
         setAuth(true);
         setUserLogado(nome);
         localStorage.setItem("logado", nome);
@@ -21,7 +24,6 @@ const App = () => {
     const handleLogout = () => {
         setAuth(false);
         setUserLogado(null);
-        // CORRIGIDO: Removido o item corretamente do localStorage
         localStorage.removeItem("logado");
     }
 
@@ -31,18 +33,26 @@ const App = () => {
                 <Route 
                     path="/login" 
                     element={
-                        <Login 
-                            loginSucess={handleLoginSucess} 
-                        />
+                        auth ? (
+                            <Navigate to="/feed" replace />
+                        ) : (
+                            <Login 
+                                loginSucess={handleLoginSucess} 
+                            />
+                        )
                     } 
                 />
                 <Route 
                     path="/feed" 
-                    element={auth ? <Feed usuario={userLogado} Logout={handleLogout} /> : <Navigate to="/login" />} 
+                    element={auth ? <Feed usuario={userLogado} Logout={handleLogout} /> : <Navigate to="/login" replace />} 
                 />
                 <Route 
                     path="/" 
-                    element={auth ? <Feed usuario={userLogado} Logout={handleLogout} /> : <Navigate to="/login" />} 
+                    element={auth ? <Feed usuario={userLogado} Logout={handleLogout} /> : <Navigate to="/login" replace />} 
+                />
+                <Route 
+                    path="*" 
+                    element={<Navigate to={auth ? "/feed" : "/login"} replace />} 
                 />
             </Routes>
         </BrowserRouter>
